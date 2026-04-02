@@ -13,7 +13,7 @@ func RunCLI(data *Data, args []string) {
 	}
 
 	command := args[1]
-	argsJoin := args[3:]
+	argsJoin := args[2:]
 	result := strings.Join(argsJoin, " ")
 	switch command {
 
@@ -25,7 +25,7 @@ func RunCLI(data *Data, args []string) {
 
 		err := add(result)
 		if err != nil {
-			fmt.Println("Error:", err)
+			fmt.Println("Failed to Add Description, Erorr :", err)
 			return
 		}
 
@@ -51,7 +51,9 @@ func RunCLI(data *Data, args []string) {
 			return
 		}
 
-		description := result
+		joinArgs := args[3:]
+
+		description := strings.Join(joinArgs, " ")
 
 		err = updateDescription(id, description)
 		if err != nil {
@@ -59,14 +61,35 @@ func RunCLI(data *Data, args []string) {
 			return
 		}
 
-		fmt.Println("Updating Task")
+		fmt.Println("Updating Task, ID :", id)
 
-	case "update-status":
+	case "in-progres":
 		id, _ := strconv.Atoi(args[2])
-		status := Status(args[3])
-		changeStatus(id, status)
+		err := changeStatus(id, StatusInProgress)
+		if err != nil {
+			fmt.Println("Failed to change status, Error :", err)
+			return
+		}
+
+		fmt.Println("Data Succesfully Update, ID : ", id)
+	case "done":
+		id, _ := strconv.Atoi(args[2])
+		err := changeStatus(id, StatusDone)
+		if err != nil {
+			fmt.Println("Failed to change status, Error :", err)
+			return
+		}
+
+		fmt.Println("Data Succesfully Update, ID : ", id)
+
+	case "--help":
+		fmt.Println("Usage add : add <descrition>")
+		fmt.Println("Usage update : update <id> <description>")
+		fmt.Println("Usage in-progres : in-progres <id>")
+		fmt.Println("Usage done : done <id>")
+		fmt.Println("Usage delete : delete <id>")
 
 	default:
-		fmt.Println("Unknown command")
+		fmt.Println("run : <--help>")
 	}
 }

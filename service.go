@@ -7,6 +7,9 @@ import (
 )
 
 func add(description string) error {
+
+	time := time.Now()
+	formatTime := time.Format("2006-01-02 15:04:05")
 	task, err := loadTask()
 	if err != nil {
 		return err
@@ -21,12 +24,12 @@ func add(description string) error {
 		ID:          newId,
 		Description: description,
 		Status:      StatusTodo,
-		CreatedAt:   time.Now(),
-		UpdateAt:    time.Now(),
+		CreatedAt:   formatTime,
+		UpdateAt:    formatTime,
 	}
 
 	task = append(task, newTodo)
-
+	fmt.Println("Succesfully added , ID :", newTodo.ID)
 	return writeFile(task)
 
 }
@@ -83,7 +86,7 @@ func changeStatus(id int, status Status) error {
 	for i := range todo {
 		if todo[i].ID == id {
 			todo[i].Status = status
-			todo[i].UpdateAt = time.Now()
+			todo[i].UpdateAt = time.Now().Format("2006-01-02 15:04:05")
 			return writeFile(todo)
 		}
 	}
@@ -100,7 +103,7 @@ func updateDescription(id int, description string) error {
 	for i := range todos {
 		if todos[i].ID == id {
 			todos[i].Description = description
-			todos[i].UpdateAt = time.Now()
+			todos[i].UpdateAt = time.Now().Format("2006-01-02 15:04:05")
 			return writeFile(todos)
 		}
 	}
